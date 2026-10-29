@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    --breakpoint-xs: 420px;
+
+    --color-brand-50: #fff1f2;
+    --color-brand-100: #ffe4e6;
+    --color-brand-200: #fecdd3;
+    --color-brand-300: #fda4af;
+    --color-brand-400: #fb7185;
+    --color-brand-500: #f43f5e;
+    --color-brand-600: #E51A2E;
+    --color-brand-700: #C81023;
+    --color-brand-800: #A10E1D;
+    --color-brand-900: #7F0D19;
+    --color-brand-950: #47040B;
+
+    --color-silver-50: #f8fafc;
+    --color-silver-100: #f1f5f9;
+    --color-silver-200: #e2e8f0;
+    --color-silver-300: #cbd5e1;
+    --color-silver-400: #9aa3b2;
+    --color-silver-500: #7c8695;
+    --color-silver-600: #5c6574;
+    --color-silver-700: #414955;
+    --color-silver-800: #272d37;
+    --color-silver-900: #151922;
+
+    --color-carbon-700: #2B364F;
+    --color-carbon-750: #222B3F;
+    --color-carbon-800: #1A2030;
+    --color-carbon-850: #141824;
+    --color-carbon-900: #0E111A;
+    --color-carbon-950: #07090E;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #07090E;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.psi-red-glow {
+    box-shadow: 0 0 50px -12px rgba(229, 26, 46, 0.35);
+}
+.psi-silver-border {
+    border: 1px solid rgba(226, 232, 240, 0.12);
+}
+.psi-grid-bg {
+    background-image: 
+        radial-gradient(circle at 15% 15%, rgba(229, 26, 46, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(148, 163, 184, 0.08) 0%, transparent 45%),
+        radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 20px 20px;
+}
+.metallic-badge {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(148, 163, 184, 0.04) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.touch-pad-btn {
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.touch-pad-btn:active {
+    transform: scale(0.94);
+    background-color: rgba(229, 26, 46, 0.25) !important;
+    border-color: #E51A2E !important;
+}
+.touch-action-btn:active {
+    transform: scale(0.97);
+}
+.safe-bottom {
+    padding-bottom: max(1.2rem, env(safe-area-inset-bottom));
+}
+.safe-top {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-track {
+    background: #0E111A;
+}
+::-webkit-scrollbar-thumb {
+    background: #272d37;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #E51A2E;
+}
