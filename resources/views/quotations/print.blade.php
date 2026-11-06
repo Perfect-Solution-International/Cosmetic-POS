@@ -140,28 +140,45 @@
             font-size: 11px;
             color: #64748b;
         }
+        @page {
+            size: A4 portrait;
+            margin: 10mm 12mm;
+        }
         @media print {
-            body { background: #fff; padding: 0; }
-            .container { box-shadow: none; padding: 0; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            body { background: #fff !important; padding: 0 !important; }
+            .container { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; }
             .no-print { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-    <div class="no-print" style="max-width: 800px; margin: 0 auto 15px; text-align: right;">
-        <button onclick="window.print()" style="background: #e11d48; color: #fff; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px;">
-            Print / Save PDF
-        </button>
+    <div class="no-print" style="max-width: 800px; margin: 0 auto 15px; display: flex; justify-content: space-between; align-items: center;">
+        <a href="javascript:window.close()" style="color: #64748b; text-decoration: none; font-size: 12px; font-weight: 600;">
+            &larr; Close Window
+        </a>
+        <div style="display: flex; gap: 8px;">
+            <button onclick="window.print()" style="background: #e11d48; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(225,29,72,0.35);">
+                <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/><path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/></svg>
+                Print Document / Save as PDF
+            </button>
+        </div>
     </div>
 
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="logo-title">
-                <h1>PSI ONE <span>GLOBAL POS</span></h1>
-                <p>{{ $quotation->branch->name }} &bull; {{ $quotation->branch->address }}, {{ $quotation->branch->city }}</p>
-                <p>Phone: {{ $quotation->branch->phone }} &bull; Email: {{ $quotation->branch->email }}</p>
+            <div style="display: flex; align-items: flex-start; gap: 14px;">
+                <img src="{{ asset('images/psi-logo.png') }}" alt="PSI" style="width: 44px; height: 44px; object-fit: contain; padding: 4px; border: 1px solid #e2e8f0; border-radius: 8px; background: #0f172a;">
+                <div class="logo-title">
+                    <h1>PSI ONE <span>GLOBAL POS</span></h1>
+                    <p>{{ $quotation->branch->name }} &bull; {{ $quotation->branch->address }}, {{ $quotation->branch->city }}</p>
+                    <p>Phone: {{ $quotation->branch->phone }} &bull; Email: {{ $quotation->branch->email }}</p>
+                </div>
             </div>
             <div class="doc-details">
                 <h2>Commercial Quotation</h2>
@@ -171,6 +188,15 @@
                     <p><strong>Valid Until:</strong> {{ $quotation->valid_until->format('F d, Y') }}</p>
                 @endif
                 <p><strong>Mode:</strong> {{ ucfirst($quotation->pricing_mode) }} Pricing</p>
+                <div style="margin-top: 5px;">
+                    <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+                        @if($quotation->status === 'accepted') background: #dcfce7; color: #15803d; border: 1px solid #86efac;
+                        @elseif($quotation->status === 'sent') background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc;
+                        @elseif($quotation->status === 'converted') background: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd;
+                        @else background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; @endif">
+                        Status: {{ $quotation->status }}
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -262,6 +288,14 @@
         </div>
     </div>
 
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('autoprint') === '1') {
+            window.addEventListener('load', () => {
+                setTimeout(() => window.print(), 350);
+            });
+        }
+    </script>
 </body>
 </html>
 

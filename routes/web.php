@@ -78,6 +78,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+    Route::post('/products/{id}/quick-price', [ProductController::class, 'quickPriceUpdate'])->name('products.quick-price');
+    Route::patch('/products/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::get('/products/attributes', [ProductController::class, 'attributes'])->name('products.attributes');
     Route::post('/products/attributes', [ProductController::class, 'storeAttribute'])->name('products.attributes.store');
     Route::post('/products/attributes/{id}/values', [ProductController::class, 'storeAttributeValue'])->name('products.attributes.values.store');

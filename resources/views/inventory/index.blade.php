@@ -276,12 +276,18 @@
                 <label class="text-xs font-bold text-silver-300 uppercase block mb-1.5">Product Variation *</label>
                 <select name="product_variation_id" required class="w-full px-3.5 py-2.5 rounded-xl bg-carbon-850 border border-carbon-700 text-white text-xs font-medium focus:outline-none focus:border-brand-500">
                     <option value="">Select Item to adjust</option>
-                    @foreach($stocks as $stk)
-                        @if($stk->productVariation)
-                            <option value="{{ $stk->productVariation->id }}">
-                                {{ $stk->productVariation->product->name ?? '' }} - {{ $stk->productVariation->name }} (Current: {{ $stk->quantity }})
-                            </option>
-                        @endif
+                    @php
+                        $variationList = (isset($allVariations) && $allVariations->isNotEmpty()) 
+                            ? $allVariations 
+                            : $stocks->pluck('productVariation')->filter();
+                    @endphp
+                    @foreach($variationList as $var)
+                        @php
+                            $curStock = $var->stocks ? $var->stocks->where('branch_id', $selectedBranchId)->sum('quantity') : 0;
+                        @endphp
+                        <option value="{{ $var->id }}">
+                            {{ $var->product->name ?? '' }} - {{ $var->name }} (SKU: {{ $var->sku }} | Current: {{ $curStock }})
+                        </option>
                     @endforeach
                 </select>
             </div>

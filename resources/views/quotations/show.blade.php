@@ -31,10 +31,24 @@
         </div>
 
         <div class="flex items-center gap-2.5">
-            <a href="{{ route('quotations.print', $quotation->id) }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-carbon-800 hover:bg-carbon-700 text-silver-300 hover:text-white text-xs font-bold transition flex items-center gap-2">
-                <i class="fa-solid fa-print"></i>
-                <span>Print PDF</span>
+            <a href="{{ route('quotations.print', $quotation->id) }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-carbon-800 hover:bg-carbon-700 text-silver-300 hover:text-white text-xs font-bold transition flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-file-pdf text-brand-400"></i>
+                <span>Print / PDF Document</span>
             </a>
+
+            @if(!empty($quotation->customer_phone))
+                @php
+                    $cleanPhone = preg_replace('/[^0-9]/', '', $quotation->customer_phone);
+                    if (str_starts_with($cleanPhone, '0') && strlen($cleanPhone) === 10) {
+                        $cleanPhone = '94' . substr($cleanPhone, 1);
+                    }
+                    $waText = urlencode("Hello " . ($quotation->customer_name ?: 'Valued Customer') . ", here is your Commercial Quotation (" . $quotation->quotation_no . ") from PSI ONE GLOBAL POS.\nTotal: Rs. " . number_format($quotation->grand_total, 2) . "\nValid Until: " . ($quotation->valid_until ? $quotation->valid_until->format('d/m/Y') : '14 days') . "\nThank you!");
+                @endphp
+                <a href="https://wa.me/{{ $cleanPhone }}?text={{ $waText }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-emerald-600/15 hover:bg-emerald-600 border border-emerald-500/30 hover:border-emerald-500 text-emerald-300 hover:text-white text-xs font-bold transition flex items-center gap-2 shadow-sm" title="Send Quotation details via WhatsApp">
+                    <i class="fa-brands fa-whatsapp text-sm text-emerald-400 group-hover:text-white"></i>
+                    <span>Send WhatsApp</span>
+                </a>
+            @endif
 
             @if($quotation->status !== 'converted')
                 <!-- Status Updater Dropdown -->

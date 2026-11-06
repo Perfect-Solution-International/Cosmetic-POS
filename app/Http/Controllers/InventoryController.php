@@ -49,13 +49,18 @@ class InventoryController extends Controller
             ->join('product_variations', 'stocks.product_variation_id', '=', 'product_variations.id')
             ->sum(DB::raw('stocks.quantity * product_variations.selling_price'));
 
+        $allVariations = ProductVariation::with(['product', 'stocks' => function($q) use ($selectedBranchId) {
+            $q->where('branch_id', $selectedBranchId);
+        }])->where('is_active', true)->orderBy('name')->get();
+
         return view('inventory.index', compact(
             'stocks',
             'branches',
             'selectedBranchId',
             'totalItemsCount',
             'totalCostValuation',
-            'totalRetailValuation'
+            'totalRetailValuation',
+            'allVariations'
         ));
     }
 
@@ -197,15 +202,18 @@ class InventoryController extends Controller
                 'adjusted_by' => Auth::id(),
             ]);
 
-            $stock = Stock::where('branch_id', $validated['branch_id'])
-                ->where('product_variation_id', $validated['product_variation_id'])
-                ->first();
+            $stock = Stock::firstOrNew([
+                'branch_id' => $validated['branch_id'],
+                'product_variation_id' => $validated['product_variation_id'],
+            ]);
 
-            if ($stock) {
-                if ($validated['type'] === 'addition') {
-                    $stock->increment('quantity', $validated['quantity']);
-                } else {
-                    $stock->decrement('quantity', min($stock->quantity, $validated['quantity']));
+            if ($validated['type'] === 'addition') {
+                $stock->quantity = ($stock->quantity ?? 0) + $validated['quantity'];
+                $stock->save();
+            } else {
+                if ($stock->exists) {
+                    $stock->quantity = max(0, ($stock->quantity ?? 0) - $validated['quantity']);
+                    $stock->save();
                 }
             }
         });
